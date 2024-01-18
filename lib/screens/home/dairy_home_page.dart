@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wanda_dairy/screens/home/tabs/dairy_home_tab.dart';
 import 'package:wanda_dairy/screens/home/tabs/payments.dart';
 import 'package:wanda_dairy/screens/home/tabs/register_farmer.dart';
-import 'package:wanda_dairy/widgets/bottom_navbar.dart';
-import 'package:wanda_dairy/widgets/info_box.dart';
-import 'package:wanda_dairy/widgets/secondary_button.dart';
 
 class DairyHomePage extends StatefulWidget {
   const DairyHomePage({super.key});
