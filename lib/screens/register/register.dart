@@ -20,7 +20,7 @@ class _RegisterState extends State<Register> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
-            'Create An Account',
+            'Create an Account',
             style: Theme.of(context).textTheme.displayLarge,
           ),
         ),
@@ -30,7 +30,6 @@ class _RegisterState extends State<Register> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const VerticalSpace(20),
                 const CustomTextFormField(
                   labelText: "Company Name",
                   hintText: "Enter Company Name",
