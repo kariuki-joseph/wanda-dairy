@@ -14,6 +14,12 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xFF6750A4),
         background: const Color(0XFFFAFAF3),
+        secondary: const Color(0xFFB9B9B9),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFFB9B9B9),
+        selectedItemColor: _primaryColor,
+        unselectedItemColor: Colors.black54,
       ),
       scaffoldBackgroundColor: Colors.white,
       useMaterial3: true,
