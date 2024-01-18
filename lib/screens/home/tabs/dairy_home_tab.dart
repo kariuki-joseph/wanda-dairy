@@ -4,8 +4,8 @@ import 'package:wanda_dairy/widgets/info_box.dart';
 import 'package:wanda_dairy/widgets/primary_button.dart';
 import 'package:wanda_dairy/widgets/secondary_button.dart';
 
-class FarmerHomePage extends StatelessWidget {
-  const FarmerHomePage({
+class DairyHomeTab extends StatelessWidget {
+  const DairyHomeTab({
     super.key,
   });
 

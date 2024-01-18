@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:wanda_dairy/screens/home/tabs/farmer_home_page.dart';
+import 'package:wanda_dairy/screens/home/tabs/dairy_home_tab.dart';
 import 'package:wanda_dairy/screens/home/tabs/payments.dart';
 import 'package:wanda_dairy/screens/home/tabs/register_farmer.dart';
 import 'package:wanda_dairy/widgets/bottom_navbar.dart';
 import 'package:wanda_dairy/widgets/info_box.dart';
 import 'package:wanda_dairy/widgets/secondary_button.dart';
 
-class HomePageDairy extends StatefulWidget {
-  const HomePageDairy({super.key});
+class DairyHomePage extends StatefulWidget {
+  const DairyHomePage({super.key});
 
   @override
-  State<HomePageDairy> createState() => _HomePageDairyState();
+  State<DairyHomePage> createState() => _DairyHomePageState();
 }
 
-class _HomePageDairyState extends State<HomePageDairy> {
+class _DairyHomePageState extends State<DairyHomePage> {
   int _currentIndex = 0;
   final _pageController = PageController();
 
@@ -33,7 +33,7 @@ class _HomePageDairyState extends State<HomePageDairy> {
               );
             },
             children: const [
-              FarmerHomePage(),
+              DairyHomeTab(),
               RegisterFarmer(),
               Payments(),
             ],
