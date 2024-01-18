@@ -18,12 +18,14 @@ class InfoBox extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 156,
-        height: 130,
+        height: 90,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             top,
             const SizedBox(height: 5.0),
