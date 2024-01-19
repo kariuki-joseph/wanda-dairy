@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wanda_dairy/models/user_model.dart';
 import 'package:wanda_dairy/routes/app_routs.dart';
+import 'package:wanda_dairy/utils/toast_utils.dart';
 
 class LoginController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,25 +16,24 @@ class LoginController extends GetxController {
 
   UserModel? get user => _userModel.value;
 
-  @override
-  void onInit() {
-    super.onInit();
-    _userModel.bindStream(_auth.authStateChanges().asyncMap((user) {
-      if (user != null) {
-        return _firestore.collection("users").doc(user.uid).get().then((doc) {
-          return UserModel.fromDocument(doc);
-        });
-      } else {
-        return Future.value(null);
-      }
-    }));
-  }
-
   Future<void> signIn() async {
     isLoading.value = true;
     try {
-      await _auth.signInWithEmailAndPassword(
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email.value, password: password.value);
+      if (userCredential.user == null) {
+        throw Exception("Unable to login user. Please try again");
+      }
+      // get user data from firestore
+      User? firebaseUser = userCredential.user;
+
+      await _firestore
+          .collection("users")
+          .doc(firebaseUser!.uid)
+          .get()
+          .then((doc) {
+        _userModel.value = UserModel.fromDocument(doc);
+      });
 
       isLoading.value = false;
       // signin was successful. Redirect to default home pages
@@ -45,14 +44,7 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       isLoading.value = false;
-
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      showErrorToast(e.toString());
     }
   }
 }

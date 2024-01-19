@@ -31,4 +31,15 @@ class UserModel {
   static List<UserModel> fromDocumentList(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) => UserModel.fromDocument(doc)).toList();
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'isAdmin': isAdmin,
+      'password': password,
+    };
+  }
 }

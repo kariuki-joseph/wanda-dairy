@@ -16,7 +16,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final LoginController _loginController = Get.put(LoginController());
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,22 +62,27 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
+                // check if user is farmer and hide the widget below
+                // ...
+                // Hide create account for farmers
                 Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.toNamed(AppRoute.register);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Don't have an account? Register",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: AppColors.primaryColor),
-                      ),
-                    ),
-                  ),
+                  child: (Get.arguments == null || Get.arguments == "dairy")
+                      ? GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRoute.register);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Don't have an account? Register",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(color: AppColors.primaryColor),
+                            ),
+                          ),
+                        )
+                      : Container(),
                 ),
               ],
             ),

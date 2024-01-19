@@ -6,6 +6,8 @@ class CustomTextFormField extends StatelessWidget {
   final bool? obscureText;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
+  final String? initialValue;
+
   final Function(String)? onChanged;
   const CustomTextFormField({
     Key? key,
@@ -15,12 +17,14 @@ class CustomTextFormField extends StatelessWidget {
     this.controller,
     this.obscureText,
     this.onChanged,
+    this.initialValue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
+      initialValue: initialValue,
       obscureText: obscureText ?? false,
       controller: controller,
       onChanged: onChanged,

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:wanda_dairy/screens/home/controller/register_farmer_controller.dart';
 import 'package:wanda_dairy/widgets/custom_input.dart';
 import 'package:wanda_dairy/widgets/primary_button.dart';
 import 'package:wanda_dairy/widgets/secondary_button.dart';
 
 class RegisterFarmer extends StatelessWidget {
-  const RegisterFarmer({super.key});
+  RegisterFarmer({super.key});
+  final RegisterFarmerController _controller =
+      Get.put(RegisterFarmerController());
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +142,7 @@ class RegisterFarmer extends StatelessWidget {
                 showBottomSheet(
                   context: context,
                   builder: (BuildContext context) {
-                    return buildRegisterBottomSheet(context);
+                    return buildRegisterBottomSheet(context, _controller);
                   },
                 );
               },
@@ -151,7 +155,8 @@ class RegisterFarmer extends StatelessWidget {
     );
   }
 
-  Widget buildRegisterBottomSheet(BuildContext context) {
+  Widget buildRegisterBottomSheet(
+      BuildContext context, RegisterFarmerController controller) {
     return FractionallySizedBox(
       heightFactor: 0.7,
       child: Padding(
@@ -168,34 +173,56 @@ class RegisterFarmer extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    const CustomTextFormField(
-                      labelText: "Farmer's Name",
-                      hintText: "Enter Farmer Name",
+                    Obx(
+                      () => CustomTextFormField(
+                        labelText: "Farmer's Name",
+                        hintText: "Enter Farmer Name",
+                        initialValue: controller.name.value,
+                        onChanged: (value) => controller.name.value = value,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    const CustomTextFormField(
-                      labelText: "Farmer's Email",
-                      hintText: "Enter Farmer Email",
-                      keyboardType: TextInputType.emailAddress,
+                    Obx(
+                      () => CustomTextFormField(
+                        labelText: "Farmer's Email",
+                        hintText: "Enter Farmer Email",
+                        initialValue: controller.email.value,
+                        onChanged: (value) => controller.email.value = value,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    const CustomTextFormField(
-                      labelText: "Farmer's Phone",
-                      hintText: "Enter Farmer Phone",
-                      keyboardType: TextInputType.phone,
+                    Obx(
+                      () => CustomTextFormField(
+                        labelText: "Farmer's Phone",
+                        hintText: "Enter Farmer Phone",
+                        initialValue: controller.phone.value,
+                        onChanged: (value) => controller.phone.value = value,
+                        keyboardType: TextInputType.phone,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    const CustomTextFormField(
-                      labelText: "Farmer's Password",
-                      hintText: "Enter Password",
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
+                    Obx(
+                      () => CustomTextFormField(
+                        labelText: "Farmer's Password",
+                        hintText: "Enter Password",
+                        initialValue: controller.password.value,
+                        onChanged: (value) => controller.password.value = value,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    PrimaryButton(
-                      onPressed: () {},
-                      child: const Text("Save"),
-                    )
+                    Obx(
+                      () => PrimaryButton(
+                        onPressed: () {
+                          controller.registerFarmer();
+                        },
+                        child: controller.isLoading.value
+                            ? const CircularProgressIndicator()
+                            : const Text("Save"),
+                      ),
+                    ),
                   ],
                 ),
               ),

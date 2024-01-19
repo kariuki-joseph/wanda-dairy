@@ -29,10 +29,10 @@ class _DairyHomePageState extends State<DairyHomePage> {
                 },
               );
             },
-            children: const [
-              DairyHomeTab(),
+            children: [
+              const DairyHomeTab(),
               RegisterFarmer(),
-              Payments(),
+              const Payments(),
             ],
           ),
         ),

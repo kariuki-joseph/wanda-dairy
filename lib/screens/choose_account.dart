@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wanda_dairy/routes/app_routs.dart';
 import 'package:wanda_dairy/widgets/info_box.dart';
 
