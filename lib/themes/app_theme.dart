@@ -10,6 +10,9 @@ class AppTheme {
     return ThemeData(
       primaryColor: _primaryColor,
       primaryColorDark: _primaryVariantColor,
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: Colors.white,
+      ),
       textTheme: AppTextTheme.theme,
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xFF6750A4),
