@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:wanda_dairy/routes/app_routs.dart';
 import 'package:wanda_dairy/widgets/info_box.dart';
 
 class ChooseAccount extends StatelessWidget {
@@ -24,12 +27,16 @@ class ChooseAccount extends StatelessWidget {
                 InfoBox(
                   top: Image.asset("images/grocery.png"),
                   bottom: const Text("Wanda Dairy Company"),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(AppRoute.login, arguments: "dairy");
+                  },
                 ),
                 InfoBox(
                   top: const Icon(Icons.delivery_dining),
                   bottom: const Text("Farmer"),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(AppRoute.login, arguments: "farmer");
+                  },
                 ),
               ],
             )
