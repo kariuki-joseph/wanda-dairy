@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "31012006028",
+    "project_id": "dairysmart-ada7c",
+    "storage_bucket": "dairysmart-ada7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31012006028:android:9e7ebac3a2a4d1824f73a9",
+        "android_client_info": {
+          "package_name": "com.example.dairysmart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzakDjC--UxoBQfEcG01VC_puOoxAgqys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31012006028:android:e1f14f5cdc12c15f4f73a9",
+        "android_client_info": {
+          "package_name": "com.example.farm2door"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzakDjC--UxoBQfEcG01VC_puOoxAgqys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31012006028:android:56e5ebffafd3054a4f73a9",
+        "android_client_info": {
+          "package_name": "com.example.wanda_dairy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzakDjC--UxoBQfEcG01VC_puOoxAgqys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
