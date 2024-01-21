@@ -88,7 +88,8 @@ class RegisterFarmer extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: SecondaryButton(
               onPressed: () {
-                showBottomSheet(
+                showModalBottomSheet(
+                  isScrollControlled: true,
                   context: context,
                   builder: (BuildContext context) {
                     return buildRegisterBottomSheet(context, _controller);
