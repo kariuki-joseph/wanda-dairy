@@ -157,6 +157,8 @@ class RegisterFarmer extends StatelessWidget {
 
   Widget buildRegisterBottomSheet(
       BuildContext context, RegisterFarmerController controller) {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     return FractionallySizedBox(
       heightFactor: 0.7,
       child: Padding(
@@ -170,60 +172,70 @@ class RegisterFarmer extends StatelessWidget {
             ),
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Obx(
-                      () => CustomTextFormField(
-                        labelText: "Farmer's Name",
-                        hintText: "Enter Farmer Name",
-                        initialValue: controller.name.value,
-                        onChanged: (value) => controller.name.value = value,
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Obx(
+                        () => CustomTextFormField(
+                          labelText: "Farmer's Name",
+                          hintText: "Enter Farmer Name",
+                          initialValue: controller.name.value,
+                          onChanged: (value) => controller.name.value = value,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Obx(
-                      () => CustomTextFormField(
-                        labelText: "Farmer's Email",
-                        hintText: "Enter Farmer Email",
-                        initialValue: controller.email.value,
-                        onChanged: (value) => controller.email.value = value,
-                        keyboardType: TextInputType.emailAddress,
+                      const SizedBox(height: 10),
+                      Obx(
+                        () => CustomTextFormField(
+                          labelText: "Farmer's Email",
+                          hintText: "Enter Farmer Email",
+                          initialValue: controller.email.value,
+                          onChanged: (value) => controller.email.value = value,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Obx(
-                      () => CustomTextFormField(
-                        labelText: "Farmer's Phone",
-                        hintText: "Enter Farmer Phone",
-                        initialValue: controller.phone.value,
-                        onChanged: (value) => controller.phone.value = value,
-                        keyboardType: TextInputType.phone,
+                      const SizedBox(height: 10),
+                      Obx(
+                        () => CustomTextFormField(
+                          labelText: "Farmer's Phone",
+                          hintText: "Enter Farmer Phone",
+                          initialValue: controller.phone.value,
+                          onChanged: (value) => controller.phone.value = value,
+                          keyboardType: TextInputType.phone,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Obx(
-                      () => CustomTextFormField(
-                        labelText: "Farmer's Password",
-                        hintText: "Enter Password",
-                        initialValue: controller.password.value,
-                        onChanged: (value) => controller.password.value = value,
-                        keyboardType: TextInputType.visiblePassword,
-                        obscureText: true,
+                      const SizedBox(height: 10),
+                      Obx(
+                        () => CustomTextFormField(
+                          labelText: "Farmer's Password",
+                          hintText: "Enter Password",
+                          initialValue: controller.password.value,
+                          onChanged: (value) =>
+                              controller.password.value = value,
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: true,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Obx(
-                      () => PrimaryButton(
-                        onPressed: () {
-                          controller.registerFarmer();
-                        },
-                        child: controller.isLoading.value
-                            ? const CircularProgressIndicator()
-                            : const Text("Save"),
+                      const SizedBox(height: 10),
+                      Obx(
+                        () => PrimaryButton(
+                          onPressed: () async {
+                            await controller.registerFarmer();
+                            // clear form if registration is successful
+                            if (controller.registerSuccess.value) {
+                              formKey.currentState?.reset();
+                              // reset register success
+                              controller.registerSuccess.value = false;
+                            }
+                          },
+                          child: controller.isLoading.value
+                              ? const CircularProgressIndicator()
+                              : const Text("Save"),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
