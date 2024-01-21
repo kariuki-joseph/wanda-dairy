@@ -128,9 +128,51 @@ class DairyHomeTab extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const CustomTextFormField(
-                      labelText: "Farmer's Name",
-                      hintText: "Enter Farmer's Name",
+                    TextFormField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: "Farmer's Name",
+                        hintText: "Enter Farmer's Name",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return FractionallySizedBox(
+                              heightFactor: 0.7,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Select Farmer",
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: 10,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Text("Farmer $index"),
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
                     const SizedBox(height: 10),
                     const CustomTextFormField(
