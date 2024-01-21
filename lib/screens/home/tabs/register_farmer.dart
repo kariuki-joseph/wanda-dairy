@@ -24,60 +24,63 @@ class RegisterFarmer extends StatelessWidget {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Obx(
-                    () => _controller.isLoading.value
-                        ? const CircularProgressIndicator()
-                        : DataTable(
-                            border: TableBorder.all(
-                              color: Colors.black,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10),
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Obx(
+                      () => _controller.isLoading.value
+                          ? const CircularProgressIndicator()
+                          : DataTable(
+                              border: TableBorder.all(
+                                color: Colors.black,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
                               ),
+                              columns: const [
+                                DataColumn(label: Text("Name")),
+                                DataColumn(label: Text("Email")),
+                                DataColumn(label: Text("Phone")),
+                              ],
+                              rows: _controller.registeredFarmers.value
+                                  .map(
+                                    (farmer) => DataRow(
+                                      cells: [
+                                        DataCell(
+                                          Text(
+                                            farmer.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall,
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            farmer.email,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall,
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            farmer.phone,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
                             ),
-                            columns: const [
-                              DataColumn(label: Text("Name")),
-                              DataColumn(label: Text("Email")),
-                              DataColumn(label: Text("Phone")),
-                            ],
-                            rows: _controller.registeredFarmers.value
-                                .map(
-                                  (farmer) => DataRow(
-                                    cells: [
-                                      DataCell(
-                                        Text(
-                                          farmer.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          farmer.email,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          farmer.phone,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
