@@ -53,6 +53,8 @@ class RegisterFarmerController extends GetxController {
       registerSuccess.value = true;
 
       showSuccessToast("Farmer registered successfully");
+      // add farmer to list of registered farmers
+      registeredFarmers.add(userModel);
       // clear fields
       _clearFields();
     } catch (e) {
