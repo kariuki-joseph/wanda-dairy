@@ -5,16 +5,16 @@ class UserModel {
   String name;
   String email;
   String phone;
-  bool isAdmin = false;
+  bool isAdmin;
   String password;
 
   UserModel({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.isAdmin,
-    required this.password,
+    this.id = "",
+    this.name = "",
+    this.email = "",
+    this.phone = "",
+    this.isAdmin = false,
+    this.password = "",
   });
 
   factory UserModel.fromDocument(DocumentSnapshot doc) {
