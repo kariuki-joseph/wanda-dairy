@@ -36,4 +36,16 @@ class MilkCollection {
         .map((doc) => MilkCollection.fromDocument(doc))
         .toList();
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'farmerId': farmerId,
+      'farmerName': farmerName,
+      'volumeInLitres': volumeInLitres,
+      'collectionDate': collectionDate,
+      'pricePerLitre': pricePerLitre,
+      'earnings': earnings,
+    };
+  }
 }

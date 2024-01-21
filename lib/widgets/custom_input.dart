@@ -7,6 +7,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final String? initialValue;
+  final String? Function(String?)? validator;
 
   final Function(String)? onChanged;
   const CustomTextFormField({
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText,
     this.onChanged,
     this.initialValue,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -28,12 +30,26 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText ?? false,
       controller: controller,
       onChanged: onChanged,
+      validator: validator,
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+      ),
+    );
+  }
+
+  static InputDecoration myInputDecoration({
+    String? labelText,
+    String? hintText,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }
