@@ -94,6 +94,9 @@ class MilkCollectionController extends GetxController {
       milkCollections.add(newEntry);
       isLoading.value = false;
       showSuccessToast("Milk collection saved successfully");
+      // reset form fields
+      milkVolumeController.text = "";
+      earningsController.text = "Ksh. 0.0";
     } catch (e) {
       isLoading.value = false;
       showErrorToast(e.toString());
