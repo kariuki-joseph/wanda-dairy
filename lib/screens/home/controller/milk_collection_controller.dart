@@ -16,35 +16,46 @@ class MilkCollectionController extends GetxController {
   final TextEditingController milkVolumeController = TextEditingController();
   final TextEditingController pricePerLtrController = TextEditingController();
   final TextEditingController earningsController = TextEditingController();
-
   // form key for form validations
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   // track loading state
   final isLoading = false.obs;
-
   // auto re-calculate daily earnings
   final volumeOfMilk = "".obs;
   final pricePerLitre = "".obs;
+  // dairy milk collection overview
+  final litresCollectedToday = 0.0.obs;
 
   final selectedDate = DateTime.now().obs;
 
   @override
   void onInit() {
     super.onInit();
-
     // set default form field values
     dateController.text = DateFormat("dd/MM/yyyy").format(selectedDate.value);
     earningsController.text = "Ksh. 0.00";
 
+    // listeners
     ever(
       selectedFarmer,
       (callback) => {nameController.text = selectedFarmer.value.name},
     );
-
     // re-calculate daily earnings
     ever(volumeOfMilk, (callback) => calculateEarnings());
     ever(pricePerLitre, (callback) => calculateEarnings());
+
+    // calculate total milk delivered today whenever a new milk collection is added
+    ever(milkCollections, (callback) {
+      milkCollections.map((collection) {
+        String today = DateFormat("dd/MM/yyyy").format(DateTime.now());
+        if (collection.collectionDate == today) {
+          litresCollectedToday.value += collection.volumeInLitres;
+        }
+      });
+    });
+
+    // fetch milk collection summary from firebase
+    getMilkCollectionSummary();
   }
 
   Future<void> saveMilkCollection() async {
@@ -79,6 +90,8 @@ class MilkCollectionController extends GetxController {
       );
 
       await _firestore.collection("milk_collections").add(newEntry.toMap());
+      // add to milk collections
+      milkCollections.add(newEntry);
       isLoading.value = false;
       showSuccessToast("Milk collection saved successfully");
     } catch (e) {
@@ -96,9 +109,8 @@ class MilkCollectionController extends GetxController {
     double totalEarnings = (double.parse(milkVolumeController.text) *
         double.parse(pricePerLtrController.text));
 
-    String formattedEarnings =
-        NumberFormat("#,##0.00", "en_US").format(totalEarnings);
-    earningsController.text = "Ksh. $formattedEarnings";
+    earningsController.text =
+        "Ksh. ${NumberFormat("#,##0.00", "en_US").format(totalEarnings)}";
   }
 
   // check if farmer has milk collected for this day to avoid collecting more than once for a single farmer
@@ -126,5 +138,18 @@ class MilkCollectionController extends GetxController {
     }
 
     return isMilkCollected;
+  }
+
+  // get today's milk collection summry
+  Future<void> getMilkCollectionSummary() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _firestore.collection("milk_collections").get();
+      if (querySnapshot.docs.isNotEmpty) {
+        milkCollections.value = MilkCollection.fromQuerySnapshot(querySnapshot);
+      }
+    } catch (e) {
+      showErrorToast(e.toString());
+    }
   }
 }
