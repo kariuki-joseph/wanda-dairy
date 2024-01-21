@@ -18,6 +18,14 @@ class RegisterFarmerController extends GetxController {
 
   UserModel? get user => _userModel.value;
 
+  final RxList<UserModel> registeredFarmers = <UserModel>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getAllFarmers();
+  }
+
   Future<void> registerFarmer() async {
     if (!_validateDetails()) return Future.value();
     isLoading.value = true;
@@ -82,5 +90,23 @@ class RegisterFarmerController extends GetxController {
     email.value = "";
     phone.value = "";
     password.value = "";
+  }
+
+  // get all registered farmers
+  Future<List<UserModel>> getAllFarmers() async {
+    List<UserModel> farmers = [];
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection("users")
+          .where("isAdmin", isEqualTo: false)
+          .get();
+
+      farmers = UserModel.fromDocumentList(snapshot);
+    } catch (e) {
+      showErrorToast(e.toString());
+    }
+    // set registered farmers
+    registeredFarmers.value = farmers;
+    return farmers;
   }
 }

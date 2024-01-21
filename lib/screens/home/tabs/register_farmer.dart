@@ -28,108 +28,54 @@ class RegisterFarmer extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  DataTable(
-                    border: TableBorder.all(
-                      color: Colors.black,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    columns: const [
-                      DataColumn(label: Text("Name")),
-                      DataColumn(label: Text("Email")),
-                      DataColumn(label: Text("Phone")),
-                    ],
-                    rows: [
-                      DataRow(
-                        cells: [
-                          DataCell(
-                            Text(
-                              "John Doe",
-                              style: Theme.of(context).textTheme.bodySmall,
+                  Obx(
+                    () => _controller.isLoading.value
+                        ? const CircularProgressIndicator()
+                        : DataTable(
+                            border: TableBorder.all(
+                              color: Colors.black,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
                             ),
+                            columns: const [
+                              DataColumn(label: Text("Name")),
+                              DataColumn(label: Text("Email")),
+                              DataColumn(label: Text("Phone")),
+                            ],
+                            rows: _controller.registeredFarmers.value
+                                .map(
+                                  (farmer) => DataRow(
+                                    cells: [
+                                      DataCell(
+                                        Text(
+                                          farmer.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          farmer.email,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          farmer.phone,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
                           ),
-                          DataCell(
-                            Text(
-                              "john@gmail.com",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              "0713275451",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(
-                            Text(
-                              "John Doe",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              "john@gmail.com",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              "0713275451",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(
-                            Text(
-                              "John Doe",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              "john@gmail.com",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              "0713275451",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(
-                            Text(
-                              "John Doe",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              "john@gmail.com",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              "0713275451",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
                   ),
                 ],
               ),
