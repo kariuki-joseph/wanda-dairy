@@ -49,31 +49,27 @@ class FarmerHomeTab extends StatelessWidget {
                 onTap: () {},
               ),
             ),
-            Obx(
-              () => InfoBox(
-                top: Text(
-                  "25 /-",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                bottom: Text(
-                  "per litre",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                onTap: () {},
+            InfoBox(
+              top: Text(
+                "25 /-",
+                style: Theme.of(context).textTheme.titleLarge,
               ),
+              bottom: Text(
+                "per litre",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              onTap: () {},
             ),
-            Obx(
-              () => InfoBox(
-                top: Text(
-                  "10, 000 /-",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                bottom: Text(
-                  "Daily Earnings",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                onTap: () {},
+            InfoBox(
+              top: Text(
+                "10, 000 /-",
+                style: Theme.of(context).textTheme.titleLarge,
               ),
+              bottom: Text(
+                "Daily Earnings",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              onTap: () {},
             ),
           ],
         ),
