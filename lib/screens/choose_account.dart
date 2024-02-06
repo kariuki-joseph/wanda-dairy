@@ -21,7 +21,7 @@ class ChooseAccount extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InfoBox(
                   top: Image.asset("images/grocery.png"),

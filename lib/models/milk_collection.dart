@@ -31,7 +31,7 @@ class MilkCollection {
     );
   }
 
-  static List<MilkCollection> fromDocumentList(QuerySnapshot snapshot) {
+  static List<MilkCollection> fromQuerySnapshot(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => MilkCollection.fromDocument(doc))
         .toList();

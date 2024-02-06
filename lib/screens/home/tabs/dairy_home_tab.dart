@@ -33,28 +33,33 @@ class DairyHomeTab extends StatelessWidget {
         const SizedBox(height: 30),
         // summary boxes
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            InfoBox(
-              top: Text(
-                "150",
-                style: Theme.of(context).textTheme.bodyLarge,
+            Obx(
+              () => InfoBox(
+                top: Text(
+                  milkCollectionController.litresCollectedToday.toString(),
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                bottom: Text(
+                  "Litres Collected",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {},
               ),
-              bottom: Text(
-                "Litres Collected",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              onTap: () {},
             ),
-            InfoBox(
-              top: Text(
-                "6",
-                style: Theme.of(context).textTheme.bodyLarge,
+            Obx(
+              () => InfoBox(
+                top: Text(
+                  farmerController.registeredFarmers.length.toString(),
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                bottom: Text(
+                  "Farmers",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {},
               ),
-              bottom: Text(
-                "Farmers",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              onTap: () {},
             ),
           ],
         ),
@@ -66,41 +71,32 @@ class DairyHomeTab extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Expanded(
-          child: DataTable(
-            columns: const [
-              DataColumn(
-                label: Text('Farmer Name'),
-              ),
-              DataColumn(
-                label: Text('Volume of Milk (Ltrs)'),
-              ),
-            ],
-            rows: const [
-              DataRow(
-                cells: [
-                  DataCell(Text('Farmer 1')),
-                  DataCell(Text('100')),
+          child: Obx(
+            () => SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: DataTable(
+                columns: const [
+                  DataColumn(
+                    label: Text('Farmer Name'),
+                  ),
+                  DataColumn(
+                    label: Text('Volume of Milk (Ltrs)'),
+                  ),
                 ],
+                rows: milkCollectionController.milkCollections
+                    .map(
+                      (milkCollection) => DataRow(
+                        cells: [
+                          DataCell(Text(milkCollection.farmerName)),
+                          DataCell(
+                            Text(milkCollection.volumeInLitres.toString()),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
               ),
-              DataRow(
-                cells: [
-                  DataCell(Text('Farmer 2')),
-                  DataCell(Text('200')),
-                ],
-              ),
-              DataRow(
-                cells: [
-                  DataCell(Text('Farmer 3')),
-                  DataCell(Text('300')),
-                ],
-              ),
-              DataRow(
-                cells: [
-                  DataCell(Text('Farmer 4')),
-                  DataCell(Text('400')),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
         Align(
@@ -280,7 +276,7 @@ class DairyHomeTab extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(
-                          farmerController.registeredFarmers[index].name,
+                          "${farmerController.registeredFarmers[index].phone} - ${farmerController.registeredFarmers[index].name}",
                         ),
                         onTap: () {
                           // set this as the selected Farmer

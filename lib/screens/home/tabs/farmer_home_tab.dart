@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:wanda_dairy/screens/home/controller/milk_collection_controller.dart';
+import 'package:wanda_dairy/screens/home/controller/register_farmer_controller.dart';
 import 'package:wanda_dairy/widgets/info_box.dart';
 
 class FarmerHomeTab extends StatelessWidget {
-  const FarmerHomeTab({super.key});
+  MilkCollectionController milkcontroller = Get.put(MilkCollectionController());
+  RegisterFarmerController farmerController =
+      Get.put(RegisterFarmerController());
+
+  FarmerHomeTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +36,18 @@ class FarmerHomeTab extends StatelessWidget {
           runSpacing: 10,
           spacing: 10,
           children: [
-            InfoBox(
-              top: Text(
-                "150",
-                style: Theme.of(context).textTheme.titleLarge,
+            Obx(
+              () => InfoBox(
+                top: Text(
+                  milkcontroller.litresCollectedToday.value.toString(),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                bottom: Text(
+                  "Litres delivered",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                onTap: () {},
               ),
-              bottom: Text(
-                "Litres delivered",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              onTap: () {},
             ),
             InfoBox(
               top: Text(
