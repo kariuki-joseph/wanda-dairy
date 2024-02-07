@@ -33,6 +33,7 @@ class DairyHomeTab extends StatelessWidget {
         const SizedBox(height: 30),
         // summary boxes
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Obx(
               () => InfoBox(
@@ -71,27 +72,30 @@ class DairyHomeTab extends StatelessWidget {
         const SizedBox(height: 10),
         Expanded(
           child: Obx(
-            () => DataTable(
-              columns: const [
-                DataColumn(
-                  label: Text('Farmer Name'),
-                ),
-                DataColumn(
-                  label: Text('Volume of Milk (Ltrs)'),
-                ),
-              ],
-              rows: milkCollectionController.milkCollections
-                  .map(
-                    (milkCollection) => DataRow(
-                      cells: [
-                        DataCell(Text(milkCollection.farmerName)),
-                        DataCell(
-                          Text(milkCollection.volumeInLitres.toString()),
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+            () => SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: DataTable(
+                columns: const [
+                  DataColumn(
+                    label: Text('Farmer Name'),
+                  ),
+                  DataColumn(
+                    label: Text('Volume of Milk (Ltrs)'),
+                  ),
+                ],
+                rows: milkCollectionController.milkCollections
+                    .map(
+                      (milkCollection) => DataRow(
+                        cells: [
+                          DataCell(Text(milkCollection.farmerName)),
+                          DataCell(
+                            Text(milkCollection.volumeInLitres.toString()),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ),
         ),

@@ -46,12 +46,14 @@ class MilkCollectionController extends GetxController {
 
     // calculate total milk delivered today whenever a new milk collection is added
     ever(milkCollections, (callback) {
-      milkCollections.map((collection) {
+      debugPrint("Milk collection changed ${milkCollections.length}");
+
+      for (var collection in milkCollections) {
         String today = DateFormat("dd/MM/yyyy").format(DateTime.now());
         if (collection.collectionDate == today) {
           litresCollectedToday.value += collection.volumeInLitres;
         }
-      });
+      }
     });
 
     // fetch milk collection summary from firebase
