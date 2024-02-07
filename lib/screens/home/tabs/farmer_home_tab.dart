@@ -32,7 +32,7 @@ class FarmerHomeTab extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Wrap(
-          alignment: WrapAlignment.center,
+          alignment: WrapAlignment.spaceAround,
           runSpacing: 10,
           spacing: 10,
           children: [
