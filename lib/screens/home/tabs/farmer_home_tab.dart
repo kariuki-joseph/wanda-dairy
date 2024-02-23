@@ -32,7 +32,7 @@ class FarmerHomeTab extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Wrap(
-          alignment: WrapAlignment.center,
+          alignment: WrapAlignment.spaceAround,
           runSpacing: 10,
           spacing: 10,
           children: [
@@ -51,12 +51,17 @@ class FarmerHomeTab extends StatelessWidget {
             ),
             InfoBox(
               top: Text(
+<<<<<<< HEAD
                 "25 /-",
+=======
+                "40 /-",
+>>>>>>> feature/get-milk-info
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               bottom: Text(
                 "per litre",
                 style: Theme.of(context).textTheme.titleLarge,
+<<<<<<< HEAD
               ),
               onTap: () {},
             ),
@@ -69,8 +74,22 @@ class FarmerHomeTab extends StatelessWidget {
                 "Daily Earnings",
                 style: Theme.of(context).textTheme.titleLarge,
               ),
+=======
+              ),
+>>>>>>> feature/get-milk-info
               onTap: () {},
             ),
+           Obx(() =>  InfoBox(
+              top: Text(
+                "${milkcontroller.litresCollectedToday.value * 40} /-",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              bottom: Text(
+                "Daily Earnings",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              onTap: () {},
+            ),)
           ],
         ),
         const SizedBox(height: 20),

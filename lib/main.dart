@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Wanda Dairy',
       theme: AppTheme.theme,
+      debugShowCheckedModeBanner: false,
       home: const ChooseAccount(),
       getPages: AppRoute.routes,
     );
