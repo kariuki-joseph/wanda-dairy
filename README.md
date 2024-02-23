@@ -1,6 +1,7 @@
 # Wanda Dairy
 
 A Flutter application for collecting and tracking milk information delivered to Wanda Dairy Company
+The app keeps track of monthly milk collected and has a payment system that is used to pay the farmers their due amount at the end of the month. The app also allows the farmers to view and download their monthly invoices.
 
 ## Sample Screens
 ![Device framecontinue-as](https://github.com/kariuki-joseph/wanda-dairy/assets/70845241/dea35b59-630b-4363-9dc4-04c933bf8f55)
