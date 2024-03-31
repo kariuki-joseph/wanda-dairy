@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wanda_dairy/screens/home/controller/milk_collection_controller.dart';
 import 'package:wanda_dairy/screens/home/controller/register_farmer_controller.dart';
+import 'package:wanda_dairy/screens/login/controller/login_controller.dart';
 import 'package:wanda_dairy/widgets/custom_input.dart';
 import 'package:wanda_dairy/widgets/info_box.dart';
 import 'package:wanda_dairy/widgets/primary_button.dart';
@@ -10,6 +12,7 @@ import 'package:wanda_dairy/widgets/secondary_button.dart';
 import 'package:wanda_dairy/widgets/my_btn_loader.dart';
 
 class DairyHomeTab extends StatelessWidget {
+  final LoginController loginControler = Get.put(LoginController());
   final RegisterFarmerController farmerController =
       Get.put(RegisterFarmerController());
   final MilkCollectionController milkCollectionController =
@@ -24,13 +27,16 @@ class DairyHomeTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Text(
-            'Good Morning Wanda Dairy',
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
+        Text(
+          "Good ${getTimeOfDay()}, ${loginControler.loggedInuser.value?.name.split(" ")[0]}",
+          style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 30),
+        Text(
+          "Welcome to your Dashboard! ",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        const SizedBox(height: 16),
         // summary boxes
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -38,7 +44,7 @@ class DairyHomeTab extends StatelessWidget {
             Obx(
               () => InfoBox(
                 top: Text(
-                  milkCollectionController.litresCollectedToday.toString(),
+                  milkCollectionController.dailyCollectedLitres.toString(),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 bottom: Text(
@@ -64,7 +70,30 @@ class DairyHomeTab extends StatelessWidget {
           ],
         ),
         // orders
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Today's Price Per Litre",
+                  style: Theme.of(context).textTheme.bodyLarge),
+              Obx(
+                () => InkWell(
+                  onTap: () {
+                    openEditPriceDialog();
+                  },
+                  child: Text(
+                    "Ksh. ${milkCollectionController.pricePerLitre.value.toString()}",
+                    style: Get.theme.textTheme.bodyLarge
+                        ?.copyWith(decoration: TextDecoration.underline),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
         Text(
           "Today's Collection Summary",
           style: Theme.of(context).textTheme.titleLarge,
@@ -75,19 +104,35 @@ class DairyHomeTab extends StatelessWidget {
             () => SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: DataTable(
+                border: TableBorder.all(
+                  color: Colors.black,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                columnSpacing: 5,
+                clipBehavior: Clip.antiAlias,
+                headingTextStyle: TextStyle(
+                  color: Get.theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                dataTextStyle: TextStyle(
+                    color: Get.theme.colorScheme.onSurface, fontSize: 12),
+                headingRowColor: MaterialStateProperty.all(
+                  Get.theme.colorScheme.surfaceVariant,
+                ),
                 columns: const [
-                  DataColumn(
-                    label: Text('Farmer Name'),
-                  ),
-                  DataColumn(
-                    label: Text('Volume of Milk (Ltrs)'),
-                  ),
+                  DataColumn(label: Text("Farmer Name")),
+                  DataColumn(label: Text("Phone")),
+                  DataColumn(label: Text("Vol of Milk(Ltrs)")),
                 ],
                 rows: milkCollectionController.milkCollections
                     .map(
                       (milkCollection) => DataRow(
                         cells: [
                           DataCell(Text(milkCollection.farmerName)),
+                          DataCell(Text(milkCollection.phone)),
                           DataCell(
                             Text(milkCollection.volumeInLitres.toString()),
                           ),
@@ -192,30 +237,14 @@ class DairyHomeTab extends StatelessWidget {
                         controller:
                             milkCollectionController.milkVolumeController,
                         onChanged: (value) {
-                          milkCollectionController.volumeOfMilk.value = value;
+                          milkCollectionController.dailyMilkVol.value =
+                              double.parse(value);
                         },
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Volume of Milk is required";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      CustomTextFormField(
-                        labelText: "Price per Litre",
-                        hintText: "Price per",
-                        controller:
-                            milkCollectionController.pricePerLtrController,
-                        onChanged: (value) => milkCollectionController
-                            .pricePerLitre.value = value,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Price per litre is required";
                           }
                           return null;
                         },
@@ -240,7 +269,7 @@ class DairyHomeTab extends StatelessWidget {
                           },
                           child: milkCollectionController.isLoading.value
                               ? const MyBtnLoader()
-                              : const Text("Save"),
+                              : const Text("Save Collection"),
                         ),
                       ),
                     ],
@@ -294,5 +323,70 @@ class DairyHomeTab extends StatelessWidget {
         );
       },
     );
+  }
+
+  void openEditPriceDialog() {
+    // open a centered dialog with textFormField and a submit button
+    milkCollectionController.pricePerLtrController.text =
+        milkCollectionController.pricePerLitre.value.toString();
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "Update Price Per Litre",
+            style: Get.theme.textTheme.titleMedium,
+          ),
+          content: Form(
+            key: milkCollectionController.updatePriceFormKey,
+            child: TextFormField(
+              controller: milkCollectionController.pricePerLtrController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
+                hintText: "Price Per Litre",
+                labelText: "Price Per Litre",
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Price per litre is required";
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Close"),
+            ),
+            Obx(
+              () => TextButton(
+                onPressed: () async {
+                  await milkCollectionController.updatePricePerLitre();
+                  Navigator.pop(context);
+                },
+                child: milkCollectionController.isUpdatingMilkPrice.value
+                    ? const CircularProgressIndicator()
+                    : const Text("Update"),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String getTimeOfDay() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return "Morning";
+    }
+    if (hour < 17) {
+      return "Afternoon";
+    }
+    return "Evening";
   }
 }
