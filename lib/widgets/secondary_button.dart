@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class SecondaryButton extends StatelessWidget {
   final Function() onPressed;
   final Widget label, icon;
+  final bool isEnabled;
 
   const SecondaryButton(
       {super.key,
       required this.onPressed,
       required this.label,
-      required this.icon});
+      required this.icon,
+      this.isEnabled = true});
 
   @override
   Widget build(BuildContext context) {

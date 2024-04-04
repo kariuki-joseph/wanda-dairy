@@ -9,7 +9,21 @@ import 'package:wanda_dairy/utils/toast_utils.dart';
 class MilkCollectionController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final RxList<MilkCollection> milkCollections = <MilkCollection>[].obs;
-  final Rx<UserModel> selectedFarmer = UserModel().obs;
+  final Rx<UserModel?> selectedFarmer = Rx<UserModel?>(null);
+  // track loading state
+  final isLoading = false.obs;
+  final isUpdatingMilkPrice = false.obs;
+  // auto re-calculate daily earnings
+  final dailyMilkVol = 0.0.obs;
+
+  final pricePerLitre = 1.0.obs;
+  // daily milk collection overview
+  final dailyCollectedLitres = 0.0.obs;
+
+  final mainCategory = "".obs;
+
+  final selectedDate = DateTime.now().obs;
+
   // user input controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -18,20 +32,13 @@ class MilkCollectionController extends GetxController {
   final TextEditingController earningsController = TextEditingController();
   // form key for form validations
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  // track loading state
-  final isLoading = false.obs;
-  // auto re-calculate daily earnings
-  final volumeOfMilk = "".obs;
-  final pricePerLitre = "".obs;
-  // dairy milk collection overview
-  final litresCollectedToday = 0.0.obs;
-  final mainCategory = "".obs;
-
-  final selectedDate = DateTime.now().obs;
+  final GlobalKey<FormState> updatePriceFormKey = GlobalKey<FormState>();
 
   @override
   void onInit() {
     super.onInit();
+    getPricePerLitre();
+
     // set default form field values
     dateController.text = DateFormat("dd/MM/yyyy").format(selectedDate.value);
     earningsController.text = "Ksh. 0.00";
@@ -39,57 +46,48 @@ class MilkCollectionController extends GetxController {
     // listeners
     ever(
       selectedFarmer,
-      (callback) => {nameController.text = selectedFarmer.value.name},
+      (callback) => {nameController.text = selectedFarmer.value?.name ?? ""},
     );
     // re-calculate daily earnings
-    ever(volumeOfMilk, (callback) => calculateEarnings());
+    ever(dailyMilkVol, (callback) => calculateEarnings());
     ever(pricePerLitre, (callback) => calculateEarnings());
 
     // calculate total milk delivered today whenever a new milk collection is added
     ever(milkCollections, (callback) {
       debugPrint("Milk collection changed ${milkCollections.length}");
 
+      // calculate milk collected today
       for (var collection in milkCollections) {
-        String today = DateFormat("dd/MM/yyyy").format(DateTime.now());
-        if (collection.collectionDate == today) {
-          litresCollectedToday.value += collection.volumeInLitres;
+        if (DateFormat("dd/MM/yyyy").format(collection.collectionDate) ==
+            DateFormat("dd/MM/yyyy").format(DateTime.now())) {
+          dailyCollectedLitres.value += collection.volumeInLitres;
         }
       }
     });
 
     // fetch milk collection summary from firebase
-    getMilkCollectionSummary();
+    fetchMilkCollectionSummary();
   }
 
   Future<void> saveMilkCollection() async {
     // validate inputs
     if (!formKey.currentState!.validate()) return Future.value();
+    if (selectedFarmer.value == null) return Future.value();
 
     // show loading
     isLoading.value = true;
-
-    // check if milk has been collected for this farmer
-    bool isMilkCollected = await checkIfMilkCollected(
-        selectedFarmer.value.id, dateController.text);
-    if (isMilkCollected) {
-      showErrorToast(
-          "Milk for ${selectedFarmer.value.name} has already been collected for this date. ");
-      isLoading.value = false;
-      return;
-    }
 
     String id = _firestore.collection("milk_collections").doc().id;
     // save to firestore
     try {
       MilkCollection newEntry = MilkCollection(
         id: id,
-        farmerId: selectedFarmer.value.id,
-        farmerName: selectedFarmer.value.name,
-        collectionDate: dateController.text,
+        farmerId: selectedFarmer.value!.id,
+        farmerName: selectedFarmer.value!.name,
+        phone: selectedFarmer.value!.phone,
+        collectionDate: DateFormat("dd/MM/yyyy").parse(dateController.text),
         volumeInLitres: double.parse(milkVolumeController.text),
         pricePerLitre: double.parse(pricePerLtrController.text),
-        earnings: double.parse(milkVolumeController.text) *
-            double.parse(pricePerLtrController.text),
       );
 
       await _firestore.collection("milk_collections").add(newEntry.toMap());
@@ -98,6 +96,7 @@ class MilkCollectionController extends GetxController {
       isLoading.value = false;
       showSuccessToast("Milk collection saved successfully");
       // reset form fields
+      selectedFarmer.value = null;
       milkVolumeController.text = "";
       earningsController.text = "Ksh. 0.0";
     } catch (e) {
@@ -107,53 +106,64 @@ class MilkCollectionController extends GetxController {
   }
 
   void calculateEarnings() {
-    if (volumeOfMilk.value == "" || pricePerLitre.value == "") {
-      earningsController.text = "Ksh. 0.00";
+    if (dailyMilkVol.value == 0 || pricePerLitre.value == 0) {
+      earningsController.text = "Ksh. 0.0";
       return;
     }
-
-    double totalEarnings = (double.parse(milkVolumeController.text) *
-        double.parse(pricePerLtrController.text));
+    double totalEarnings =
+        (double.parse(milkVolumeController.text) * pricePerLitre.value);
 
     earningsController.text =
         "Ksh. ${NumberFormat("#,##0.00", "en_US").format(totalEarnings)}";
   }
 
-  // check if farmer has milk collected for this day to avoid collecting more than once for a single farmer
-  Future<bool> checkIfMilkCollected(String farmerId, String date) async {
-    isLoading.value = true;
-    bool isMilkCollected = false;
-    try {
-      await _firestore
-          .collection("milk_collections")
-          .where("farmerId", isEqualTo: farmerId)
-          .where("collectionDate", isEqualTo: date)
-          .get()
-          .then((value) {
-        isLoading.value = false;
-        if (value.docs.isNotEmpty) {
-          isMilkCollected = true;
-        } else {
-          isMilkCollected = false;
-        }
-      });
-    } catch (e) {
-      isLoading.value = false;
-      isMilkCollected = false;
-      showErrorToast(e.toString());
-    }
-
-    return isMilkCollected;
-  }
-
   // get today's milk collection summry
-  Future<void> getMilkCollectionSummary() async {
+  Future<void> fetchMilkCollectionSummary() async {
     try {
       QuerySnapshot querySnapshot =
           await _firestore.collection("milk_collections").get();
       if (querySnapshot.docs.isNotEmpty) {
         milkCollections.value = MilkCollection.fromQuerySnapshot(querySnapshot);
       }
+    } catch (e) {
+      showErrorToast(e.toString());
+    }
+  }
+
+  // update the price per litre
+  Future<void> updatePricePerLitre() async {
+    if (!updatePriceFormKey.currentState!.validate()) return;
+
+    isUpdatingMilkPrice.value = true;
+
+    pricePerLitre.value = double.parse(pricePerLtrController.text);
+    // save to firebase
+    await _firestore
+        .collection("price_per_litre")
+        .doc(DateFormat("dd/MM/yyyy").format(DateTime.now()))
+        .set(
+      {
+        "price": double.parse(pricePerLtrController.text),
+      },
+    );
+
+    isUpdatingMilkPrice.value = false;
+
+    showSuccessToast("Price Per Litre updated successfully");
+  }
+
+  // get price per litre from firebase
+  void getPricePerLitre() async {
+    try {
+      await _firestore.collection("settings").doc("price_per_litre").get().then(
+        (value) {
+          if (value.exists) {
+            double price = double.parse(value.data()!["price"].toString());
+            pricePerLitre.value = price;
+            pricePerLtrController.text = price.toString();
+          }
+        },
+      );
     } catch (e) {
       showErrorToast(e.toString());
     }

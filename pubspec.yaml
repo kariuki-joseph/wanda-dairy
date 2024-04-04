@@ -40,6 +40,12 @@ dependencies:
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
   intl: ^0.19.0
+  table_calendar: ^3.1.1
+  shared_preferences: ^2.2.2
+  pdf: ^3.10.8
+  path: ^1.9.0
+  universal_html: ^2.2.4
+  path_provider: ^2.1.2
 
 
 dev_dependencies:
@@ -51,7 +57,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^3.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

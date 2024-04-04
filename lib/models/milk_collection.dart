@@ -4,19 +4,21 @@ class MilkCollection {
   String id;
   String farmerId;
   String farmerName;
+  String phone;
   double volumeInLitres;
-  String collectionDate;
+  DateTime collectionDate;
   double pricePerLitre;
-  double earnings;
+  bool isPaid;
 
   MilkCollection({
     required this.id,
     required this.farmerId,
     required this.farmerName,
+    required this.phone,
     required this.volumeInLitres,
     required this.collectionDate,
     required this.pricePerLitre,
-    required this.earnings,
+    this.isPaid = false,
   });
 
   factory MilkCollection.fromDocument(DocumentSnapshot doc) {
@@ -24,10 +26,11 @@ class MilkCollection {
       id: doc['id'],
       farmerId: doc['farmerId'],
       farmerName: doc['farmerName'],
+      phone: doc['phone'],
       volumeInLitres: doc['volumeInLitres'],
-      collectionDate: doc['collectionDate'],
+      collectionDate: (doc['collectionDate'] as Timestamp).toDate(),
       pricePerLitre: doc['pricePerLitre'],
-      earnings: doc['earnings'],
+      isPaid: doc['isPaid'] ?? false,
     );
   }
 
@@ -42,10 +45,23 @@ class MilkCollection {
       'id': id,
       'farmerId': farmerId,
       'farmerName': farmerName,
+      'phone': phone,
       'volumeInLitres': volumeInLitres,
-      'collectionDate': collectionDate,
+      'collectionDate': Timestamp.fromDate(collectionDate),
       'pricePerLitre': pricePerLitre,
-      'earnings': earnings,
+      'isPaid': isPaid,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is MilkCollection) {
+      return farmerId == other.farmerId;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => farmerId.hashCode;
 }
