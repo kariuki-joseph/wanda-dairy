@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wanda_dairy/screens/home/tabs/dairy_home_tab.dart';
-import 'package:wanda_dairy/screens/home/tabs/payments.dart';
+import 'package:wanda_dairy/screens/home/tabs/payments_tab.dart';
+import 'package:wanda_dairy/screens/home/tabs/profile_tab.dart';
 import 'package:wanda_dairy/screens/home/tabs/register_farmer.dart';
 
 class DairyHomePage extends StatefulWidget {
@@ -32,11 +33,13 @@ class _DairyHomePageState extends State<DairyHomePage> {
             children: [
               DairyHomeTab(),
               RegisterFarmer(),
-              const Payments(),
+              PaymentsTab(),
+              ProfileTab()
             ],
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed, // add this line
           currentIndex: _currentIndex,
           items: const [
             BottomNavigationBarItem(
@@ -51,6 +54,10 @@ class _DairyHomePageState extends State<DairyHomePage> {
               icon: Icon(Icons.add_card),
               label: 'Payments',
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined),
+              label: "Profile",
+            )
           ],
           onTap: (index) {
             _pageController.animateToPage(

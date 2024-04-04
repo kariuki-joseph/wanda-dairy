@@ -1,19 +1,21 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wanda_dairy/routes/app_routes.dart';
 import 'package:wanda_dairy/screens/register/controller/register_controller.dart';
 import 'package:wanda_dairy/themes/app_colors.dart';
 import 'package:wanda_dairy/widgets/custom_input.dart';
 import 'package:wanda_dairy/widgets/primary_button.dart';
 import 'package:wanda_dairy/widgets/vertical_space.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class RegisterAdmin extends StatefulWidget {
+  const RegisterAdmin({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<RegisterAdmin> createState() => _RegisterAdminState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterAdminState extends State<RegisterAdmin> {
   final RegisterController _registerController = Get.put(RegisterController());
 
   @override
@@ -21,10 +23,9 @@ class _RegisterState extends State<Register> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           title: Text(
-            'Create an Account',
-            style: Theme.of(context).textTheme.displayLarge,
+            'Admin Create Account',
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         body: Padding(
@@ -33,6 +34,17 @@ class _RegisterState extends State<Register> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(
+                  child: Image.asset("images/admin.png", height: 150.0),
+                ),
+                const VerticalSpace(10.0),
+                Center(
+                  child: Text(
+                    "Create Admin Account",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 CustomTextFormField(
                   labelText: "Company Name",
                   hintText: "Enter Company Name",
@@ -70,7 +82,7 @@ class _RegisterState extends State<Register> {
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
                 ),
-                const VerticalSpace(10.0),
+                const VerticalSpace(16.0),
                 Center(
                   child: Obx(
                     () => PrimaryButton(
@@ -79,7 +91,10 @@ class _RegisterState extends State<Register> {
                       },
                       child: _registerController.isLoading.value
                           ? const CircularProgressIndicator()
-                          : const Text("Register"),
+                          : Text(
+                              "Register",
+                              style: Get.theme.textTheme.bodyMedium,
+                            ),
                     ),
                   ),
                 ),
@@ -90,12 +105,24 @@ class _RegisterState extends State<Register> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Already have an account? Login",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: AppColors.primaryColor),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Already have an account? ',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Login',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(color: AppColors.primaryColor),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Get.toNamed(AppRoute.adminLogin);
+                                },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

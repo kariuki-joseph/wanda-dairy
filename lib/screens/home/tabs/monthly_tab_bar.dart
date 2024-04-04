@@ -6,18 +6,17 @@ import 'package:wanda_dairy/screens/home/controller/farmer_controller.dart';
 import 'package:wanda_dairy/widgets/custom_caledar_day.dart';
 import 'package:wanda_dairy/widgets/info_box.dart';
 
-class DailyTabBar extends StatefulWidget {
-  const DailyTabBar({super.key});
+class MonthlyTabBar extends StatefulWidget {
+  const MonthlyTabBar({super.key});
 
   @override
-  State<DailyTabBar> createState() => _DailyTabBarState();
+  State<MonthlyTabBar> createState() => _MonthlyTabBarState();
 }
 
-class _DailyTabBarState extends State<DailyTabBar> {
+class _MonthlyTabBarState extends State<MonthlyTabBar> {
   FarmerController farmerController = Get.put(FarmerController());
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
-  DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class _DailyTabBarState extends State<DailyTabBar> {
             runSpacing: 4,
             children: [
               Text(
-                "Here's your Daily",
+                "Here's your Monthly",
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Text(
@@ -49,7 +48,7 @@ class _DailyTabBarState extends State<DailyTabBar> {
               Obx(
                 () => InfoBox(
                   top: Text(
-                    "${farmerController.dailyVolume.value}L",
+                    "${farmerController.monthlyVolume.value}L",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   bottom: Text(
@@ -62,7 +61,7 @@ class _DailyTabBarState extends State<DailyTabBar> {
               Obx(
                 () => InfoBox(
                   top: Text(
-                    "${farmerController.collectionDates.contains(DateFormat("dd/MM/yyyy").format(DateTime.now())) ? farmerController.dailyPricePerLitre.value : farmerController.pricePerLitre.value} /-",
+                    "${farmerController.collectionDates.contains(DateFormat("dd/MM/yyyy").format(DateTime.now())) ? farmerController.monthlyPricePerLitre.value : farmerController.pricePerLitre.value} /-",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   bottom: Text(
@@ -72,18 +71,16 @@ class _DailyTabBarState extends State<DailyTabBar> {
                   onTap: () {},
                 ),
               ),
-              Obx(
-                () => InfoBox(
-                  top: Text(
-                    "${NumberFormat("#,##0.00").format(farmerController.dailyEarnings.value)} /-",
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  bottom: Text(
-                    "Daily Earnings",
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  onTap: () {},
+              InfoBox(
+                top: Text(
+                  "${NumberFormat("#,##0.00").format(farmerController.monthlyEarnings.value)} /-",
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
+                bottom: Text(
+                  "Monthly Earnings",
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                onTap: () {},
               ),
             ],
           ),
@@ -91,7 +88,7 @@ class _DailyTabBarState extends State<DailyTabBar> {
           TableCalendar(
             focusedDay: focusedDay,
             selectedDayPredicate: (day) {
-              return isSameDay(focusedDay, day);
+              return isSameDay(selectedDay, day);
             },
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
@@ -99,28 +96,19 @@ class _DailyTabBarState extends State<DailyTabBar> {
                 this.focusedDay = focusedDay;
               });
               // display the summaries for this day
-              farmerController.getDailySummary(selectedDay);
+              farmerController.getMonthlySummary(selectedDay);
             },
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.5),
-                shape: BoxShape.circle,
-              ),
-              todayTextStyle: const TextStyle().copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+            firstDay: DateTime(
+              DateTime.now().year,
+              1,
+              1,
             ),
-            // display only the current week
-            firstDay: now.subtract(Duration(days: now.weekday - 1)),
-            lastDay: now
-                .subtract(Duration(days: now.weekday - 1))
-                .add(const Duration(days: 6)),
-            calendarFormat: CalendarFormat.week,
+            lastDay: DateTime(
+              DateTime.now().year + 1,
+              12,
+              31,
+            ),
+            calendarFormat: CalendarFormat.month,
             headerStyle: const HeaderStyle(
               formatButtonVisible: false,
               titleCentered: true,
@@ -128,12 +116,7 @@ class _DailyTabBarState extends State<DailyTabBar> {
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, day, _) {
                 DateTime now = DateTime.now();
-                DateTime startOfWeek =
-                    now.subtract(Duration(days: now.weekday - 1));
-                DateTime endOfWeek = startOfWeek.add(const Duration(days: 6));
-                if (day.isAfter(
-                        startOfWeek.subtract(const Duration(days: 1))) &&
-                    day.isBefore(endOfWeek.add(const Duration(days: 1)))) {
+                if (day.month == now.month && day.year == now.year) {
                   return Obx(() {
                     String dayString = DateFormat("dd/MM/yyyy").format(day);
                     return CustomCalendaDay(
@@ -159,7 +142,7 @@ class _DailyTabBarState extends State<DailyTabBar> {
                     hasCollection:
                         farmerController.collectionDates.contains(dayString),
                     volume: farmerController.totalVolume[dayString] ?? 0.0,
-                    selected: selectedDay == day,
+                    selected: true,
                   );
                 });
               },

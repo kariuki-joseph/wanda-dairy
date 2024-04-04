@@ -27,9 +27,11 @@ class DairyHomeTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Good ${getTimeOfDay()}, ${loginControler.loggedInuser.value?.name.split(" ")[0]}",
-          style: Theme.of(context).textTheme.headlineLarge,
+        Obx(
+          () => Text(
+            "Good ${getTimeOfDay()}, ${loginControler.loggedInuser.value?.name.split(" ")[0]}",
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
         ),
         const SizedBox(height: 30),
         Text(
@@ -44,7 +46,7 @@ class DairyHomeTab extends StatelessWidget {
             Obx(
               () => InfoBox(
                 top: Text(
-                  milkCollectionController.dailyCollectedLitres.toString(),
+                  "${milkCollectionController.dailyCollectedLitres}L",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 bottom: Text(
@@ -115,7 +117,7 @@ class DairyHomeTab extends StatelessWidget {
                 headingTextStyle: TextStyle(
                   color: Get.theme.colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12,
+                  fontSize: 11,
                 ),
                 dataTextStyle: TextStyle(
                     color: Get.theme.colorScheme.onSurface, fontSize: 12),
@@ -127,23 +129,27 @@ class DairyHomeTab extends StatelessWidget {
                   DataColumn(label: Text("Phone")),
                   DataColumn(label: Text("Vol of Milk(Ltrs)")),
                 ],
-                rows: milkCollectionController.milkCollections
-                    .map(
-                      (milkCollection) => DataRow(
-                        cells: [
-                          DataCell(Text(milkCollection.farmerName)),
-                          DataCell(Text(milkCollection.phone)),
-                          DataCell(
-                            Text(milkCollection.volumeInLitres.toString()),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
+                rows: List.generate(
+                  milkCollectionController.milkCollections.length,
+                  (index) {
+                    final milkCollection =
+                        milkCollectionController.milkCollections[index];
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(milkCollection.farmerName)),
+                        DataCell(Text(milkCollection.phone)),
+                        DataCell(
+                          Text("${milkCollection.volumeInLitres}L"),
+                        ),
+                      ],
+                    );
+                  },
+                ).toList(),
               ),
             ),
           ),
         ),
+        const SizedBox(height: 16),
         Align(
           alignment: Alignment.bottomRight,
           child: SecondaryButton(
@@ -305,7 +311,7 @@ class DairyHomeTab extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(
-                          "${farmerController.registeredFarmers[index].phone} - ${farmerController.registeredFarmers[index].name}",
+                          "${farmerController.registeredFarmers[index].name} - ${farmerController.registeredFarmers[index].phone}",
                         ),
                         onTap: () {
                           // set this as the selected Farmer

@@ -20,17 +20,22 @@ class InfoBox extends StatelessWidget {
         width: 156,
         height: 90,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            top,
-            const SizedBox(height: 5.0),
-            bottom,
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              top,
+              const SizedBox(height: 5.0),
+              Positioned(
+                bottom: 0,
+                child: bottom,
+              ),
+            ],
+          ),
         ),
       ),
     );

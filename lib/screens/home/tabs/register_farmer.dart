@@ -17,7 +17,7 @@ class RegisterFarmer extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text(
           'Registered Farmers',
-          style: Theme.of(context).textTheme.displayLarge,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
       body: Column(
@@ -40,12 +40,25 @@ class RegisterFarmer extends StatelessWidget {
                                   Radius.circular(10),
                                 ),
                               ),
+                              columnSpacing: 5,
+                              clipBehavior: Clip.antiAlias,
+                              headingTextStyle: TextStyle(
+                                color: Get.theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                              dataTextStyle: TextStyle(
+                                  color: Get.theme.colorScheme.onSurface,
+                                  fontSize: 12),
+                              headingRowColor: MaterialStateProperty.all(
+                                Get.theme.colorScheme.surfaceVariant,
+                              ),
                               columns: const [
                                 DataColumn(label: Text("Name")),
                                 DataColumn(label: Text("Email")),
                                 DataColumn(label: Text("Phone")),
                               ],
-                              rows: _controller.registeredFarmers.value
+                              rows: _controller.registeredFarmers
                                   .map(
                                     (farmer) => DataRow(
                                       cells: [
@@ -167,7 +180,7 @@ class RegisterFarmer extends StatelessWidget {
                           obscureText: true,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       Obx(
                         () => PrimaryButton(
                           onPressed: () async {
